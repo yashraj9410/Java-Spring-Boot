@@ -19,6 +19,10 @@ public class App
         // we need to make a communication also
         // create a xml file in class path
         obj.code();
+
+        // demonstration of setter injection
+        System.out.println(obj.getAge());
         System.out.println( "Hello World!" );
+
     }
 }
