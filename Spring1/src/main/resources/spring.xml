@@ -5,6 +5,7 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 <bean id ='alien' class = 'com.yash.Alien'>
+    <!--constructor-arg value = "21" !  this is to pass value to contructor itself-->
     <property name="age" value="21"></property>
     <property name="lap" ref="lap1"></property>
 </bean>
