@@ -6,5 +6,7 @@
 
 <bean id ='alien' class = 'com.yash.Alien'>
     <property name="age" value="21"></property>
+    <property name="lap" ref="lap1"></property>
 </bean>
+    <bean id="lap1" class="com.yash.Laptop"></bean>
 </beans>
