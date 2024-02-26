@@ -4,14 +4,14 @@ public class Alien {
 
     private int age;
     private Laptop lap;
+
+    public Alien(int age){
+        System.out.println("Para constructor called");
+        this.age = age;
+    }
     public void code(){
         System.out.println("Coding");
         lap.compile();
-    }
-
-    public void setAge(int age){
-        System.out.println("Setter Called") ;
-        this.age =age;
     }
 
     public Laptop getLap() {

@@ -9,6 +9,6 @@ public class Desktop implements Computer {
 
     @Override
     public void compile(){
-        System.out.println("Running in Laptop");
+        System.out.println("Running in Desktop");
     }
 }
