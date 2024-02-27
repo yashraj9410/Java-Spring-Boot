@@ -39,4 +39,10 @@ public class QuestionService {
     public Question getQuestionById(Integer Id){
         return questionDao.findQuestionById(Id);
     }
+
+    // custom query service
+    public List<Question> executeCustomQuery(){
+        List<Question> questions = questionDao.findByCustomQuery();
+        return questions;
+    }
 }

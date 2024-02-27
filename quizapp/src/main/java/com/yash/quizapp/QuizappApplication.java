@@ -8,7 +8,7 @@ public class QuizappApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(QuizappApplication.class, args);
-		System.out.println("Hello Working");
+		System.out.println("Server Running on Port : 8080");
 	}
 
 }
