@@ -87,32 +87,56 @@ public class QuestionController {
 
 
     @DeleteMapping("deleteQuestion/{questionId}")
-    public Map<String, String> deleteQuestion(@PathVariable Integer questionId) {
-        Map<String, String> response = new HashMap<>();
+    public ResponseEntity<Map<String, String>> deleteQuestion(@PathVariable Integer questionId) {
         try {
             questionService.deleteQuestion(questionId);
+
+            // Create a response object for success
+            Map<String, String> response = new HashMap<>();
             response.put("status", "200");
             response.put("message", "Question deleted successfully");
-            return response;
+
+            // Return the response with status 200
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            response.put("error", "Failed to delete question");
-            return response;
+            // If an exception occurs, return an error response
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("status", "500");
+            errorResponse.put("error", "Failed to delete question");
+            errorResponse.put("message", e.getMessage());
+
+            // Return the error response with status 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
+    // The wildcard <?> indicates that the response body can be of any type.
     @GetMapping("getQuestion/{questionId}")
-    public Question getQuestionById(@PathVariable Integer questionId) {
+    public ResponseEntity<?> getQuestionById(@PathVariable Integer questionId) {
+        try {
+            Question question = questionService.getQuestionById(questionId);
 
-        return  questionService.getQuestionById(questionId);
-
+            // Check if the question exists
+            if (question != null) {
+                // Return the question with status 200
+                return ResponseEntity.ok(question);
+            } else {
+                // If the question does not exist, return 404 Not Found
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Question with ID " + questionId + " not found");
+            }
+        } catch (Exception e) {
+            // If an exception occurs, return an error response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to retrieve question. Error: " + e.getMessage());
+        }
     }
 
 
     // controller for executing custom query
     @GetMapping("/custom")
     public List<Question> customQuery(){
-        List<Question> questions  = questionService.executeCustomQuery();
-        return questions;
+        return questionService.executeCustomQuery();
     }
 
 }
