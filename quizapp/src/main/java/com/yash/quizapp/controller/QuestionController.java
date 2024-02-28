@@ -1,5 +1,7 @@
 package com.yash.quizapp.controller;
 import com.yash.quizapp.Question;
+import com.yash.quizapp.service.AdminService;
+import com.yash.quizapp.service.JwtUtil;
 import com.yash.quizapp.service.QuestionService;
 // import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,13 @@ public class QuestionController {
 
     @Autowired
     QuestionService questionService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    AdminService adminService;
+
 
     @GetMapping("allQuestions")
     public ResponseEntity<List<Question>> getAllQuestions() {
@@ -37,18 +46,45 @@ public class QuestionController {
     }
 
     @PostMapping("/createQuestion")
-    public ResponseEntity<Map<String, String>> createQuestion(@RequestBody Question question) {
+    public ResponseEntity<Map<String, String>> createQuestion
+            (@RequestBody Question question,
+             @RequestHeader("Authorization") String authorizationHeader
+            ) {
         try {
-            // Save the question to the database using the questionService
-            questionService.createQuestion(question);
 
-            // Create a response object
+            // Extract the token from the Authorization header
+            String token = authorizationHeader.substring(7); // Remove "Bearer " prefix
             Map<String, String> response = new HashMap<>();
-            response.put("status", "200");
-            response.put("message", "Question created successfully");
 
-            // Return the response with status 200
-            return ResponseEntity.ok(response);
+            // validate the token and then retrieve the data
+            if(jwtUtil.validateToken(token)){
+                String subject  = jwtUtil.getEmailFromToken(token);
+                String[] payloads = subject.split(":");
+
+                // Extract the email from the token
+                String email = payloads[0];
+                int admin_id = Integer.parseInt(payloads[1]) ;
+
+                // check admin with email exists
+                if(adminService.getAdminByEmail(email) != null){
+
+                    // Save the question to the database using the questionService
+                    question.setAdminId(admin_id);
+                    questionService.createQuestion(question);
+
+                    // Create a response object
+                    response.put("status", "200");
+                    response.put("message", "Question created successfully");
+
+                    // Return the response with status 200
+                    return ResponseEntity.ok(response);
+                }
+
+            }
+
+             response.put("401", "Unauthorised");
+             return ResponseEntity.status(401).body(response);
+
         } catch (Exception e) {
             // If an exception occurs, return an error response
             Map<String, String> errorResponse = new HashMap<>();

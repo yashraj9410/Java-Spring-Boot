@@ -1,10 +1,14 @@
 package com.yash.quizapp.service;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.yash.quizapp.Admin;
 import com.yash.quizapp.dao.AdminDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class AdminService {
@@ -14,6 +18,10 @@ public class AdminService {
     AdminDao adminDao;
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    // jwt secret for token
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
     public void createAdmin(Admin admin){
 
@@ -33,4 +41,6 @@ public class AdminService {
         Admin admin = adminDao.getAdminByEmail(email);
         return admin;
     }
+
+
 }

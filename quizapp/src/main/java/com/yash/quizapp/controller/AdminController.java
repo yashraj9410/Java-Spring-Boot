@@ -3,6 +3,7 @@ package com.yash.quizapp.controller;
 import com.yash.quizapp.Admin;
 import com.yash.quizapp.LoginDTO;
 import com.yash.quizapp.service.AdminService;
+import com.yash.quizapp.service.JwtUtil;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,9 @@ public class AdminController {
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
 
     // signup controller
@@ -47,7 +51,11 @@ public class AdminController {
             if(admin != null){
                 if(adminService.verifyPassword(password,admin)){
                     // login Success
-                    return ResponseEntity.ok("Logged in success");
+                    // Generate JWT token
+                    String token = jwtUtil.generateToken(email,admin.getAdmin_id());
+
+                    // Return token in response in the header
+                    return ResponseEntity.ok().header("Authorization", "Bearer " + token).body("Logged in successfully :" + token);
                     // token sign and send to header for further authentication
                 }
                 return ResponseEntity.status(402).body("Password Doesw not match ");

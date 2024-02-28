@@ -20,6 +20,16 @@ public class Question {
 
     private String answer;
 
+    private Integer adminid;
+
+    public Integer getAdminId() {
+        return adminid;
+    }
+
+    public void setAdminId(Integer adminId) {
+        this.adminid = adminId;
+    }
+
     public Integer getId() {
         return id;
     }
