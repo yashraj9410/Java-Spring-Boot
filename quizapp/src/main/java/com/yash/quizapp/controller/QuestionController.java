@@ -172,7 +172,9 @@ public class QuestionController {
     // controller for executing custom query
     @GetMapping("/custom")
     public List<Question> customQuery(){
+
         return questionService.executeCustomQuery();
+
     }
 
 }
